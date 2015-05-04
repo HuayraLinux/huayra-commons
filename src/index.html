@@ -1,17 +1,35 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset='utf-8'>
+  <meta charset="utf-8">
   <link rel="stylesheet" href="css/bootstrap.css" media="screen">
   <link rel="stylesheet" href="css/estilo.css" media="screen">
-
 </head>
 <body>
-<h1>¡Hola, esta es la plantilla HTML de la aplicación huayra-commons!</h1>
-
-<p>Estas viendo el archivo <code>src/index.html</code>, y
-está usando también los archivos <code>css/estilo.css</code> y
-<code>js/app.js</code>.
-
-  <script src="js/app.js"></script>
+	<section id="login-wrapper">
+		<h1>Identifícate</h1>
+		<form>
+			<input type="text" placeholder="Usuario" />
+			<input type="password" placeholder="Contraseña" />
+			<a href="" id="register">Registrarse</a>
+			<input type="submit" placeholder="Ingresar" />
+		</form>
+	</section>
+	<section id="upload-wrapper">
+		<h1>Subir archivo</h1>
+		<form>
+			<input type="text" id="title" placeholder="Título" />
+			<div id="drop-file"></div>
+			<input type="file" id="file" />
+			<textarea id="descripcion" placeholder="Descripción"></textarea>
+			<label for="licencia">Licencia: </label><select id="licencia"></select>
+			<input type="submit" placeholder="Subir" />
+		</form>
+	</section>
+	<section id="info-wrapper">
+		<h1>Archivo subido</h1>
+		<div id="upload-info"></div>
+	</section>
+	<script src="js/app.js"></script>
 </body>
 </html>
