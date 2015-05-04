@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=huayra-commons
+Comment=Comment
+Exec=/usr/bin/huayra-commons
+Terminal=false
+Type=Application
+Icon=huayra-commons
+Categories=GNOME;GTK;Huayra;Network;

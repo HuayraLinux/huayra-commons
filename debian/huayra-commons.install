@@ -1,0 +1,4 @@
+src/* usr/share/huayra-commons/src
+bin/huayra-commons usr/bin/
+debian/huayra-commons.desktop /usr/share/applications
+debian/huayra-commons.svg /usr/share/icons/hicolor/scalable/apps
