@@ -9,6 +9,7 @@
   "author": "",
   "license": "GPLv3",
   "dependencies": {
-    "nodemw": "^0.5.1"
+    "nodemw": "^0.5.1",
+    "bluebird": "*"
   }
 }

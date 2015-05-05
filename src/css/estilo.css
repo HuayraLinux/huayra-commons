@@ -1,2 +1,153 @@
 body {
+	overflow: hidden;
+}
+section {
+	display: inline-block;
+	width: 33.333%;
+	height: 100%;
+	position: absolute;
+	padding: 10px;
+	top: 0px;
+}
+#sections-wrapper {
+	position: absolute;
+	top: 0px;
+	width: 300%;
+	height: 100%;
+	transition: left 0.7s;
+	-webkit-transition: left 0.7s;
+}
+#login-wrapper {
+	left: 0px;
+}
+#upload-wrapper {
+	left: 33.333%;
+}
+#info-wrapper {
+	left: 66.666%;
+}
+body.paso-1 #sections-wrapper {
+	left: 0px;
+}
+body.paso-2 #sections-wrapper {
+	left: -100%;
+}
+body.paso-3 #sections-wrapper {
+	left: -200%;
+}
+
+#login-wrapper input {
+	display: block;
+	margin: 5px 0;
+}
+
+#login-wrapper #status {
+	display: none;
+}
+
+#login-wrapper #status.info {
+	display: block;
+	color: gray;
+}
+
+#login-wrapper #status.error {
+	display: block;
+	color: red;
+}
+
+.spinner {
+	-webkit-animation: fa-spin 4s infinite linear;
+	animation: fa-spin 4s infinite linear;
+}
+
+@-webkit-keyframes fa-spin {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(359deg);
+		transform: rotate(359deg);
+	}
+}
+@keyframes fa-spin {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(359deg);
+		transform: rotate(359deg);
+	}
+}
+
+#upload-wrapper #drop-file {
+	display: block;
+	width: 230px;
+	height: 162px;
+	margin: 7px;
+	text-align: center;
+	vertical-align: middle;
+	border-style: dashed;
+	border-width: 3px;
+	border-color: lightgrey;
+}
+
+#upload-wrapper #drop-file.drag {
+	border-color: orange;
+}
+#upload-wrapper #drop-file.drag .glyphicon {
+	color: orange;
+}
+#upload-wrapper #drop-file.drag .msg {
+	visibility: hidden;
+}
+
+#upload-wrapper #drop-file .glyphicon {
+	display: block;
+	margin-top: 10px;
+	font-size: 5em;
+	color: lightgray;
+}
+
+#upload-wrapper #drop-file .msg {
+	display: inline-block;
+	width: 75%;
+	margin-top: 10px;
+	text-align: center;
+}
+
+#upload-wrapper #title {
+	display: block;
+	width: 182px;
+}
+
+#upload-wrapper #descripcion {
+	display: block;
+	width: 182px;
+}
+
+#upload-wrapper input[type=submit] {
+	display: block;
+	width: 65px;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
 }

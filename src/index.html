@@ -5,31 +5,39 @@
   <link rel="stylesheet" href="css/bootstrap.css" media="screen">
   <link rel="stylesheet" href="css/estilo.css" media="screen">
 </head>
-<body>
-	<section id="login-wrapper">
-		<h1>Identifícate</h1>
-		<form>
-			<input type="text" placeholder="Usuario" />
-			<input type="password" placeholder="Contraseña" />
-			<a href="" id="register">Registrarse</a>
-			<input type="submit" placeholder="Ingresar" />
-		</form>
-	</section>
-	<section id="upload-wrapper">
-		<h1>Subir archivo</h1>
-		<form>
-			<input type="text" id="title" placeholder="Título" />
-			<div id="drop-file"></div>
-			<input type="file" id="file" />
-			<textarea id="descripcion" placeholder="Descripción"></textarea>
-			<label for="licencia">Licencia: </label><select id="licencia"></select>
-			<input type="submit" placeholder="Subir" />
-		</form>
-	</section>
-	<section id="info-wrapper">
-		<h1>Archivo subido</h1>
-		<div id="upload-info"></div>
-	</section>
+<body class="paso-1">
+	<div id="sections-wrapper">
+		<section id="login-wrapper">
+			<h1>Identifícate</h1>
+			<form>
+				<input name="username" type="text" placeholder="Usuario" required />
+				<input name="password" type="password" placeholder="Contraseña" required />
+				<a href="" id="register">Registrarse</a>
+				<input type="submit" value="Ingresar" class="btn btn-success" />
+				<div id="status"></div>
+			</form>
+		</section>
+		<section id="upload-wrapper">
+			<h1>Subir archivo</h1>
+			<form>
+				<div id="drop-file">
+					<span class="glyphicon glyphicon-cloud-upload"></span>
+					<span class="msg">Suelta aquí un archivo para subirlo</span>
+				</div>
+					<span class="btn btn-primary btn-file">
+						...o búscalo <input type="file" id="file" />
+					</span>
+				<input type="text" id="title" placeholder="Título" />
+				<textarea id="descripcion" placeholder="Descripción"></textarea>
+				<label for="licencia">Licencia: </label><select id="licencia"></select>
+				<input type="submit" value="Subir" class="btn btn-success" />
+			</form>
+		</section>
+		<section id="info-wrapper">
+			<h1>Archivo subido</h1>
+			<div id="upload-info"></div>
+		</section>
+	</div>
 	<script src="js/app.js"></script>
 </body>
 </html>
