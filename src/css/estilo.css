@@ -81,7 +81,7 @@ body.paso-3 #sections-wrapper {
 	}
 }
 
-#upload-wrapper #drop-file {
+#upload-wrapper #drop-file, #upload-wrapper #loading, #upload-wrapper #loaded {
 	display: block;
 	width: 230px;
 	height: 162px;
@@ -92,25 +92,33 @@ body.paso-3 #sections-wrapper {
 	border-width: 3px;
 	border-color: lightgrey;
 }
-
-#upload-wrapper #drop-file.drag {
-	border-color: orange;
+#upload-wrapper #loading, #upload-wrapper #loaded, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading {
+	display: none;
 }
-#upload-wrapper #drop-file.drag .glyphicon {
-	color: orange;
-}
-#upload-wrapper #drop-file.drag .msg {
-	visibility: hidden;
+#upload-wrapper #loading span {
+	display: block;
 }
 
-#upload-wrapper #drop-file .glyphicon {
+#upload-wrapper #drop-file .glyphicon, #upload-wrapper #loading .glyphicon, #upload-wrapper #loaded .glyphicon {
 	display: block;
 	margin-top: 10px;
 	font-size: 5em;
 	color: lightgray;
 }
 
-#upload-wrapper #drop-file .msg {
+#upload-wrapper #drop-file.drag, #upload-wrapper #loading, #upload-wrapper #loading .glyphicon {
+	border-color: orange;
+	color: orange;
+}
+#upload-wrapper #loaded, #upload-wrapper #loaded .glyphicon {
+	border-color: green;
+	color: green;
+}
+#upload-wrapper #drop-file.drag .msg {
+	visibility: hidden;
+}
+
+#upload-wrapper #drop-file .msg, #upload-wrapper #loading .msg {
 	display: inline-block;
 	width: 75%;
 	margin-top: 10px;

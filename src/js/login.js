@@ -2,7 +2,7 @@ module.exports = (function(require) {
 	'use strict';
 
 	var mediaWiki = require('./mediaWiki'),
-		$ = require('./jquery.min'),
+		$ = require('./jquery'),
 		router = require('./router');
 
 	return {

@@ -1,7 +1,7 @@
 module.exports = (function(require) {
 	'use strict';
 
-	var $ = require('./jquery.min');
+	var $ = require('./jquery');
 
 	return {
 		goToStep: function(stepNumber) {

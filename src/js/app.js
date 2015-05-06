@@ -1,7 +1,7 @@
 (function(require, document, FileReader) {
 	'use strict';
 
-	var $ = require('./js/jquery.min'),
+	var $ = require('./js/jquery'),
 		login = require('./js/login'),
 		upload = require('./js/upload');
 

@@ -24,9 +24,20 @@
 					<span class="glyphicon glyphicon-cloud-upload"></span>
 					<span class="msg">Suelta aquí un archivo para subirlo</span>
 				</div>
-					<span class="btn btn-primary btn-file">
-						...o búscalo <input type="file" id="file" />
-					</span>
+				<div id="loading">
+					<span class="glyphicon glyphicon-cog spinner"></span>
+					<span class="msg">Leyendo...</span>
+					<span class="completed"></span>
+				</div>
+				<div id="loaded">
+					<span class="glyphicon glyphicon-ok"></span>
+					<span class="msg"></span>
+				</div>
+				<span class="btn btn-primary btn-file">
+					...o búscalo <input type="file" id="file" />
+				</span>
+				<button class="btn btn-danger" id="cancel-reading">Cancelar</button>
+				<button class="btn btn-danger" id="cancel-file">Cancelar</button>
 				<input type="text" id="title" placeholder="Título" />
 				<textarea id="descripcion" placeholder="Descripción"></textarea>
 				<label for="licencia">Licencia: </label><select id="licencia"></select>
