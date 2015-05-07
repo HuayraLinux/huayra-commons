@@ -27,6 +27,21 @@ module.exports = (function(require) {
 					}
 				});
 			});
+		},
+		upload: function(opts) {
+			return new Promise(function(fulfill, reject) {
+				mw.upload(opts.fileName, opts.file, opts.summary, function(err, res) {
+					if(err) {
+						reject(err);
+						return;
+					}
+					//console.log(err, res);
+					console.log(res);
+					console.log("LA URL A MOSTRAR ES " + res.imageinfo.url);
+					console.log("LA URL ES " + res.imageinfo.descriptionurl);
+					fulfill(res);
+				});
+			});
 		}
 	};
 })(require);

@@ -2,32 +2,47 @@ module.exports = (function(require) {
 	'use strict';
 
 	var $ = require('./jquery'),
-		bootbox = require('./bootbox'),
-		FileReader;
+		mediaWiki = require('./mediaWiki'),
+		router = require('./router'),
+		bootbox,
+		FileReader,
+		fileContent;
 
 	var loadState = function() {
-		$('#upload-wrapper #cancel-reading, #upload-wrapper #cancel-file, #upload-wrapper #loading, #upload-wrapper #loaded').hide();
-		$('#upload-wrapper .btn-file, #upload-wrapper #drop-file').show();
+		$('#upload-wrapper #cancel-reading, #upload-wrapper #cancel-file, #upload-wrapper #loading, #upload-wrapper #loaded, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
+		$('#upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper input[type=submit]').show();
 		$('#upload-wrapper #file').val('');
+		$('#upload-wrapper input[type=submit]').attr('disabled', true);
+		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', false);
 		$('#upload-wrapper #drop-file').removeClass('drag');
 	};
 
 	var loadingState = function(fileName) {
 		return function() {
-			$('#upload-wrapper #cancel-file, #upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper #loaded').hide();
-			$('#upload-wrapper #cancel-reading, #upload-wrapper #loading').show();
+			$('#upload-wrapper #cancel-file, #upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper #loaded, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
+			$('#upload-wrapper #cancel-reading, #upload-wrapper #loading, #upload-wrapper input[type=submit]').show();
+			$('#upload-wrapper input[type=submit]').attr('disabled', true);
+			$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', false);
 			$('#upload-wrapper #loading .msg').text('Leyendo ' + fileName + '...');
 		};
 	};
 
 	var loadedState = function(fileName) {
 		return function(e) {
-			$('#upload-wrapper #cancel-reading, #upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper #loading').hide();
-			$('#upload-wrapper #cancel-file, #upload-wrapper #loaded').show();
+			$('#upload-wrapper #cancel-reading, #upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper #loading, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
+			$('#upload-wrapper #cancel-file, #upload-wrapper #loaded, #upload-wrapper input[type=submit]').show();
 			$('#upload-wrapper #title').val($('#upload-wrapper #title').val() || fileName);
 			$('#upload-wrapper #loaded .msg').text(fileName);
-			// e.target.result
+			$('#upload-wrapper input[type=submit]').attr('disabled', false);
+			$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', false);
+			fileContent = e.target.result;
 		};
+	};
+
+	var sendingState = function() {
+		$('#upload-wrapper input[type=submit]').hide();
+		$('#upload-wrapper #sending-button, #upload-wrapper #cancel-upload').show();
+		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', true);
 	};
 
 	var onFileError = function(e) {
@@ -60,6 +75,7 @@ module.exports = (function(require) {
 	var readFile = function(files) {
 		if(files.length > 1) {
 			bootbox.alert('Por favor, selecciona sólo un archivo');
+			loadState();
 			return;
 		}
 
@@ -82,6 +98,42 @@ module.exports = (function(require) {
 
 	return {
 		init: function(document, FR) {
+			bootbox = require('./bootbox')(document);
+
+			$('#upload-wrapper form').submit(function(e) {
+				var canceled;
+				e.preventDefault();
+
+				if(!fileContent) {
+					bootbox.alert('Error: debes seleccionar un archivo.');
+					return
+				}
+
+				sendingState();
+
+				$('#upload-wrapper #cancel-upload').off().click(function(e) {
+					canceled = true;
+					loadState();
+				});
+
+				mediaWiki.upload({
+					fileName: $('#upload-wrapper #title').val(),
+					file: fileContent,
+					summary: $('#upload-wrapper #descripcion').val()
+				}).then(function(res) {
+					if(canceled) {
+						return;
+					}
+					router.goToStep(3);
+				}, function(err) {
+					if(canceled) {
+						return;
+					}
+					bootbox.alert('Ocurrió un error' + (err ? ': ' + err : '.'));
+					loadState();
+				});
+			})
+
 			FileReader = FR;
 			document.body.addEventListener('drop', function(e) {
 				e.preventDefault();
@@ -93,7 +145,7 @@ module.exports = (function(require) {
 				loadState();
 			});
 
-			$('#upload-wrapper #file').click(function(e) {
+			$('#upload-wrapper #file').change(function(e) {
 				readFile($(this).get(0).files);
 			});
 

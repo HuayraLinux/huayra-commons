@@ -92,7 +92,7 @@ body.paso-3 #sections-wrapper {
 	border-width: 3px;
 	border-color: lightgrey;
 }
-#upload-wrapper #loading, #upload-wrapper #loaded, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading {
+#upload-wrapper #loading, #upload-wrapper #loaded, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload {
 	display: none;
 }
 #upload-wrapper #loading span {
@@ -133,11 +133,6 @@ body.paso-3 #sections-wrapper {
 #upload-wrapper #descripcion {
 	display: block;
 	width: 182px;
-}
-
-#upload-wrapper input[type=submit] {
-	display: block;
-	width: 65px;
 }
 
 .btn-file {
