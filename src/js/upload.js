@@ -4,6 +4,7 @@ module.exports = (function(require) {
 	var $ = require('./jquery'),
 		mediaWiki = require('./mediaWiki'),
 		router = require('./router'),
+		infoPage = require('./infoPage'),
 		bootbox,
 		FileReader,
 		fileContent;
@@ -11,7 +12,7 @@ module.exports = (function(require) {
 	var loadState = function() {
 		$('#upload-wrapper #cancel-reading, #upload-wrapper #cancel-file, #upload-wrapper #loading, #upload-wrapper #loaded, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
 		$('#upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper input[type=submit]').show();
-		$('#upload-wrapper #file').val('');
+		$('#upload-wrapper #file, #upload-wrapper #title').val('');
 		$('#upload-wrapper input[type=submit]').attr('disabled', true);
 		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', false);
 		$('#upload-wrapper #drop-file').removeClass('drag');
@@ -92,7 +93,7 @@ module.exports = (function(require) {
 			reader.onabort = loadState;
 			reader.onloadstart = loadingState(files[0].name);
 			reader.onload = loadedState(files[0].name);
-			reader.readAsArrayBuffer(files[0]);
+			reader.readAsBinaryString(files[0]);
 		}
 	};
 
@@ -124,6 +125,13 @@ module.exports = (function(require) {
 					if(canceled) {
 						return;
 					}
+					if(!res.result || res.result.toLowerCase() != 'success') {
+						bootbox.alert('Ocurrió un error');
+						console.warn(res);
+						loadState();
+						return;
+					}
+					infoPage.setData(res);
 					router.goToStep(3);
 				}, function(err) {
 					if(canceled) {
@@ -165,6 +173,7 @@ module.exports = (function(require) {
 				e.stopPropagation();
 				readFile(e.dataTransfer.files);
 			}, false);
-		}
+		},
+		restart: loadState
 	};
 })(require);

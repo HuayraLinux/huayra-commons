@@ -35,10 +35,6 @@ module.exports = (function(require) {
 						reject(err);
 						return;
 					}
-					//console.log(err, res);
-					console.log(res);
-					console.log("LA URL A MOSTRAR ES " + res.imageinfo.url);
-					console.log("LA URL ES " + res.imageinfo.descriptionurl);
 					fulfill(res);
 				});
 			});

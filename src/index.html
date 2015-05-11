@@ -53,13 +53,22 @@
 						Subiendo...
 						<span class="glyphicon glyphicon-cog spinner"></span>
 					</button>
+					<!-- El botón de cancelar quedará para otra iteración:
 					<button class="btn btn-danger" id="cancel-upload">Cancelar</button>
+					-->
 				</div>
 			</form>
 		</section>
 		<section id="info-wrapper">
 			<h1>Archivo subido</h1>
-			<div id="upload-info"></div>
+			<div id="upload-info">
+				<span id="ok-logo" class="glyphicon glyphicon-ok"></span>
+				<p id="uploaded-description"></p>
+				<p>
+					Haz subido <span id="uploaded-file-name"></span> con éxito. Puedes editarlo en <a href="#" id="uploaded-file-edition-url" class="open-external"></a> o verlo en <a href="#" id="uploaded-file-view-url" class="open-external"></a>.
+				</p>
+			</div>
+			<button id="back-to-upload" class="btn btn-info">Subir otro archivo</button>
 		</section>
 	</div>
 	<script src="js/app.js"></script>
