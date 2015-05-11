@@ -21,14 +21,26 @@ var client = new bot({
 
 client.logIn(function(err) {
 
-  var fileName = "logo123.png";
+  var fileName = "nueva_imagen_asd123.png";
   var content = fs.readFileSync('src/imagenes/logo.png');
-  var summary = "123";
+  var summary = "primer subida de la imagen";
 
 	client.upload(fileName, content, summary, function(err, res) {
     //console.log(err, res);
     console.log(res);
+
     console.log("LA URL A MOSTRAR ES " + res.imageinfo.url);
     console.log("LA URL ES " + res.imageinfo.descriptionurl);
+
+    client.edit('File:'+fileName, '=={{int:license-header}}==\n{{self|cc-by-sa-3.0}}', 'Poniendole la licencia', function(err, res) {
+      console.log("resultado de edicion", res);
+    })
   });
+
+
+
+
+
+
+
 });
