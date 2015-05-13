@@ -5,8 +5,10 @@ module.exports = (function(require) {
 		MW = require('nodemw'),
 		mw = new MW({
 			protocol:  '',
-			server: 'mediawiki-cvcv.rhcloud.com',
-			path: '',
+			server: 'commons.wikimedia.org',
+			path: 'w',
+//			server: "mediawiki-cvcv.rhcloud.com",
+//			path: "",
 			debug: true,
 			port: 80,
 			userAgent: 'foo/bar.net',
@@ -31,11 +33,18 @@ module.exports = (function(require) {
 		upload: function(opts) {
 			return new Promise(function(fulfill, reject) {
 				mw.upload(opts.fileName, opts.file, opts.summary, function(err, res) {
-					if(err) {
+					if(err || !res.result || res.result.toLowerCase() != 'success') {
 						reject(err);
 						return;
 					}
-					fulfill(res);
+					mw.edit('File:' + res.filename, '=={{int:license-header}}==\n' + opts.license, 'Agregando la licencia', function(err, resLicense) {
+						if(err || !resLicense.result || resLicense.result.toLowerCase() != 'success') {
+							console.warn('license error', err);
+							reject(err);
+							return;
+						}
+						fulfill(res);
+					})
 				});
 			});
 		}

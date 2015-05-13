@@ -12,10 +12,12 @@ module.exports = (function(require) {
 	var loadState = function() {
 		$('#upload-wrapper #cancel-reading, #upload-wrapper #cancel-file, #upload-wrapper #loading, #upload-wrapper #loaded, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
 		$('#upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper input[type=submit]').show();
-		$('#upload-wrapper #file, #upload-wrapper #title').val('');
+		$('#upload-wrapper #file, #upload-wrapper #title, #upload-wrapper #descripcion').val('');
 		$('#upload-wrapper input[type=submit]').attr('disabled', true);
-		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', false);
+		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', false);
 		$('#upload-wrapper #drop-file').removeClass('drag');
+		$('#upload-wrapper ')
+		$('#upload-wrapper input[name=license]').prop('checked', false);
 	};
 
 	var loadingState = function(fileName) {
@@ -23,7 +25,7 @@ module.exports = (function(require) {
 			$('#upload-wrapper #cancel-file, #upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper #loaded, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
 			$('#upload-wrapper #cancel-reading, #upload-wrapper #loading, #upload-wrapper input[type=submit]').show();
 			$('#upload-wrapper input[type=submit]').attr('disabled', true);
-			$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', false);
+			$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', false);
 			$('#upload-wrapper #loading .msg').text('Leyendo ' + fileName + '...');
 		};
 	};
@@ -35,7 +37,7 @@ module.exports = (function(require) {
 			$('#upload-wrapper #title').val($('#upload-wrapper #title').val() || fileName);
 			$('#upload-wrapper #loaded .msg').text(fileName);
 			$('#upload-wrapper input[type=submit]').attr('disabled', false);
-			$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', false);
+			$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', false);
 			fileContent = e.target.result;
 		};
 	};
@@ -43,7 +45,7 @@ module.exports = (function(require) {
 	var sendingState = function() {
 		$('#upload-wrapper input[type=submit]').hide();
 		$('#upload-wrapper #sending-button, #upload-wrapper #cancel-upload').show();
-		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper #licencia').attr('disabled', true);
+		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', true);
 	};
 
 	var onFileError = function(e) {
@@ -98,11 +100,15 @@ module.exports = (function(require) {
 	};
 
 	return {
-		init: function(document, FR) {
+		init: function(document, FR, gui) {
 			bootbox = require('./bootbox')(document);
 
+			$('#upload-wrapper .license-wrapper a').click(function(e) {
+				e.preventDefault();
+				gui.Shell.openExternal($(this).attr('href'));
+			});
+
 			$('#upload-wrapper form').submit(function(e) {
-				var canceled;
 				e.preventDefault();
 
 				if(!fileContent) {
@@ -112,31 +118,15 @@ module.exports = (function(require) {
 
 				sendingState();
 
-				$('#upload-wrapper #cancel-upload').off().click(function(e) {
-					canceled = true;
-					loadState();
-				});
-
 				mediaWiki.upload({
 					fileName: $('#upload-wrapper #title').val(),
 					file: fileContent,
-					summary: $('#upload-wrapper #descripcion').val()
+					summary: $('#upload-wrapper #descripcion').val(),
+					license: $('#upload-wrapper input[name=license]').val()
 				}).then(function(res) {
-					if(canceled) {
-						return;
-					}
-					if(!res.result || res.result.toLowerCase() != 'success') {
-						bootbox.alert('Ocurrió un error');
-						console.warn(res);
-						loadState();
-						return;
-					}
 					infoPage.setData(res);
 					router.goToStep(3);
 				}, function(err) {
-					if(canceled) {
-						return;
-					}
 					bootbox.alert('Ocurrió un error' + (err ? ': ' + err : '.'));
 					loadState();
 				});

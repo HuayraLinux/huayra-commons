@@ -9,7 +9,7 @@
 
 	$(document).ready(function() {
 		login.init();
-		upload.init(document, FileReader);
+		upload.init(document, FileReader, gui);
 		info.init(gui, upload);
 	});
 })(require, document, FileReader);

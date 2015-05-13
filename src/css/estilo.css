@@ -154,3 +154,8 @@ body.paso-3 #sections-wrapper {
     cursor: inherit;
     display: block;
 }
+
+.license-wrapper label {
+	font-weight: normal;
+	font-size: 10px;
+}
