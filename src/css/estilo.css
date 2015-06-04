@@ -91,6 +91,7 @@ body.paso-3 #sections-wrapper {
 	border-style: dashed;
 	border-width: 3px;
 	border-color: lightgrey;
+	position: relative;
 }
 #upload-wrapper #loading, #upload-wrapper #loaded, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload {
 	display: none;
@@ -158,4 +159,22 @@ body.paso-3 #sections-wrapper {
 .license-wrapper label {
 	font-weight: normal;
 	font-size: 10px;
+}
+
+#upload-wrapper .preview-image-wrapper {
+	vertical-align: middle;
+	line-height: 156px;
+	height: 156px;
+	text-align: center;
+}
+
+#upload-wrapper .preview-image, #upload-wrapper #loaded audio, #upload-wrapper #loaded video {
+	max-width: 224px;
+	max-height: 156px;
+}
+
+#upload-wrapper #loaded audio {
+	position: absolute;
+	bottom: 0;
+	left: 0;
 }

@@ -2,12 +2,13 @@ module.exports = (function(require) {
 	'use strict';
 
 	var Promise = require('bluebird'),
+		server = 'commons.wikimedia.org',
+//		server = "mediawiki-cvcv.rhcloud.com",
 		MW = require('nodemw'),
 		mw = new MW({
 			protocol:  '',
-			server: 'commons.wikimedia.org',
+			server: server,
 			path: 'w',
-//			server: "mediawiki-cvcv.rhcloud.com",
 //			path: "",
 			debug: true,
 			port: 80,
@@ -17,6 +18,38 @@ module.exports = (function(require) {
 
 //	username: 'test',
 //	password: 'asd123',
+
+
+	var setLicense = function(fileName, license, captchaData, res) {
+		console.log(fileName, license, captchaData, res);
+		return new Promise(function(fulfill, reject) {
+			mw.edit('File:' + fileName, '=={{int:license-header}}==\n' + license, 'Agregando la licencia', function(err, resLicense) {
+				if(err) {
+					console.warn('license error', err);
+					reject(err);
+					return;
+				}
+
+				if(resLicense.captcha) {
+					fulfill({
+						next: function(userResponse, fulfill, reject) {
+							setLicense(fileName, license, {
+								id: resLicense.captcha.id,
+								word: userResponse
+							}, res).then(fulfill, reject);
+						},
+						type: resLicense.captcha.type,
+						image: resLicense.captcha.type == 'image' ? server + resLicense.captcha.url : null,
+						question: resLicense.captcha.type != 'image' ? resLicense.captcha.question : null
+					});
+				}
+				else {
+					fulfill(res);
+				}
+			}, captchaData);
+		});
+	};
+
 	return {
 		login: function(username, password) {
 			return new Promise(function(fulfill, reject) {
@@ -33,18 +66,11 @@ module.exports = (function(require) {
 		upload: function(opts) {
 			return new Promise(function(fulfill, reject) {
 				mw.upload(opts.fileName, opts.file, opts.summary, function(err, res) {
-					if(err || !res.result || res.result.toLowerCase() != 'success') {
+					if(err) {
 						reject(err);
 						return;
 					}
-					mw.edit('File:' + res.filename, '=={{int:license-header}}==\n' + opts.license, 'Agregando la licencia', function(err, resLicense) {
-						if(err || !resLicense.result || resLicense.result.toLowerCase() != 'success') {
-							console.warn('license error', err);
-							reject(err);
-							return;
-						}
-						fulfill(res);
-					})
+					setLicense(res.filename, opts.license, null, res).then(fulfill, reject);
 				});
 			});
 		}

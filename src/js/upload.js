@@ -5,9 +5,46 @@ module.exports = (function(require) {
 		mediaWiki = require('./mediaWiki'),
 		router = require('./router'),
 		infoPage = require('./infoPage'),
+		Promise = require('bluebird'),
 		bootbox,
 		FileReader,
 		fileContent;
+
+	var previewImage = require('./preview-image'),
+		previewAudio = require('./preview-audio'),
+		previewVideo = require('./preview-video'),
+		previewPdf = require('./preview-pdf'),
+		previewDefault = require('./preview-default');
+
+	var preview = {
+		_selectType: function(mimeType) {
+			console.log(mimeType);
+			switch(mimeType.split('/')[0]) {
+				case 'image':
+					this._previewer = previewImage;
+					break;
+				case 'audio':
+					this._previewer = previewAudio;
+					break;
+				case 'video':
+					this._previewer = previewVideo;
+					break;
+				default:
+					if(mimeType == 'application/pdf') {
+						this._previewer = previewPdf;
+					}
+					else {
+						this._previewer = previewDefault;
+					}
+			}
+			return this;
+		},
+		show: function(fileOpts) {
+			this._selectType(fileOpts.type);
+			$('#upload-wrapper #loaded').empty().append(this._previewer.show(fileOpts));
+			return this;
+		}
+	};
 
 	var loadState = function() {
 		$('#upload-wrapper #cancel-reading, #upload-wrapper #cancel-file, #upload-wrapper #loading, #upload-wrapper #loaded, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
@@ -16,11 +53,10 @@ module.exports = (function(require) {
 		$('#upload-wrapper input[type=submit]').attr('disabled', true);
 		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', false);
 		$('#upload-wrapper #drop-file').removeClass('drag');
-		$('#upload-wrapper ')
 		$('#upload-wrapper input[name=license]').prop('checked', false);
 	};
 
-	var loadingState = function(fileName) {
+	var loadingState = function(fileName, type, path) {
 		return function() {
 			$('#upload-wrapper #cancel-file, #upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper #loaded, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
 			$('#upload-wrapper #cancel-reading, #upload-wrapper #loading, #upload-wrapper input[type=submit]').show();
@@ -30,15 +66,20 @@ module.exports = (function(require) {
 		};
 	};
 
-	var loadedState = function(fileName) {
+	var loadedState = function(fileName, type, path) {
 		return function(e) {
 			$('#upload-wrapper #cancel-reading, #upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper #loading, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
 			$('#upload-wrapper #cancel-file, #upload-wrapper #loaded, #upload-wrapper input[type=submit]').show();
 			$('#upload-wrapper #title').val($('#upload-wrapper #title').val() || fileName);
-			$('#upload-wrapper #loaded .msg').text(fileName);
 			$('#upload-wrapper input[type=submit]').attr('disabled', false);
 			$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', false);
 			fileContent = e.target.result;
+			preview.show({
+				name: fileName,
+				type: type,
+				content: e.target.result,
+				path: path
+			});
 		};
 	};
 
@@ -93,15 +134,59 @@ module.exports = (function(require) {
 			reader.onerror = onFileError;
 			reader.onprogress = onFileProgress;
 			reader.onabort = loadState;
-			reader.onloadstart = loadingState(files[0].name);
-			reader.onload = loadedState(files[0].name);
+			reader.onloadstart = loadingState(files[0].name, files[0].type, files[0].path);
+			reader.onload = loadedState(files[0].name, files[0].type, files[0].path);
 			reader.readAsBinaryString(files[0]);
 		}
+	};
+
+	var showCaptcha = function(captcha) {
+		return new Promise(function(fulfill, reject) {
+			$('#captcha-wrapper').modal('show');
+
+			$('#captcha-wrapper form').off().submit(function(e) {
+				e.preventDefault();
+				$('#captcha-wrapper').modal('hide');
+				captcha.next($('#captcha-wrapper #captcha-response').val(), fulfill, reject);
+			});
+
+			if(captcha.type == 'image') {
+				$('#captcha-wrapper #graphic-captcha').show();
+				$('#captcha-wrapper #text-captcha').hide();
+				$('#captcha-wrapper #graphic-captcha img').attr('src', captcha.image);
+			}
+			else {
+				$('#captcha-wrapper #graphic-captcha').hide();
+				$('#captcha-wrapper #text-captcha').show();
+				$('#captcha-wrapper #text-captcha #captcha-question').text(captcha.question);
+			}
+		});
+	};
+
+	var uploadOk = function(res) {
+		if(res.captcha) {
+			showCaptcha(res.captcha).then(uploadOk, uploadError);
+			return;
+		}
+		infoPage.setData(res);
+		router.goToStep(3);
+	};
+
+	var uploadError = function(err) {
+		debugger;
+		bootbox.alert('Ocurrió un error' + (err ? ': ' + err : '.'));
+		loadState();
 	};
 
 	return {
 		init: function(document, FR, gui) {
 			bootbox = require('./bootbox')(document);
+
+			$('#captcha-wrapper').modal({
+				backdrop: 'static',
+				keyboard: false,
+				show: false
+			});
 
 			$('#upload-wrapper .license-wrapper a').click(function(e) {
 				e.preventDefault();
@@ -123,13 +208,7 @@ module.exports = (function(require) {
 					file: fileContent,
 					summary: $('#upload-wrapper #descripcion').val(),
 					license: $('#upload-wrapper input[name=license]').val()
-				}).then(function(res) {
-					infoPage.setData(res);
-					router.goToStep(3);
-				}, function(err) {
-					bootbox.alert('Ocurrió un error' + (err ? ': ' + err : '.'));
-					loadState();
-				});
+				}).then(uploadOk, uploadError);
 			})
 
 			FileReader = FR;
