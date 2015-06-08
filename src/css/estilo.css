@@ -8,6 +8,10 @@ section {
 	position: absolute;
 	padding: 10px;
 	top: 0px;
+	background-image: url(../imagenes/huayra-commons.svg);
+	background-repeat: no-repeat;
+	background-position: 95% -15px;
+	background-size: 110px;
 }
 #sections-wrapper {
 	position: absolute;
