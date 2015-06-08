@@ -70,7 +70,7 @@ module.exports = (function(require) {
 		return function(e) {
 			$('#upload-wrapper #cancel-reading, #upload-wrapper .btn-file, #upload-wrapper #drop-file, #upload-wrapper #loading, #upload-wrapper #sending-button, #upload-wrapper #cancel-upload').hide();
 			$('#upload-wrapper #cancel-file, #upload-wrapper #loaded, #upload-wrapper input[type=submit]').show();
-			$('#upload-wrapper #title').val($('#upload-wrapper #title').val() || fileName);
+			$('#upload-wrapper #title').val($('#upload-wrapper #title').val() || fileName.replace(/\#<>\[\]\|\:\{\}\//g, '_'));
 			$('#upload-wrapper input[type=submit]').attr('disabled', false);
 			$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', false);
 			fileContent = e.target.result;
@@ -198,18 +198,28 @@ module.exports = (function(require) {
 
 				if(!fileContent) {
 					bootbox.alert('Error: debes seleccionar un archivo.');
-					return
+					return;
+				}
+
+				if(!$('#upload-wrapper #title').val().trim()) {
+					bootbox.alert('Debes escribir un nombre para el archivo');
+					return;
+				}
+
+				if($('#upload-wrapper #title').val().match(/\#<>\[\]\|\:\{\}\//)) {
+					bootbox.alert('El título no puede contener los caracteres: "# < > [ ] | : { } /"');
+					return;
 				}
 
 				sendingState();
 
 				mediaWiki.upload({
-					fileName: $('#upload-wrapper #title').val(),
+					fileName: $('#upload-wrapper #title').val().trim(),
 					file: fileContent,
 					summary: $('#upload-wrapper #descripcion').val(),
 					license: $('#upload-wrapper input[name=license]').val()
 				}).then(uploadOk, uploadError);
-			})
+			});
 
 			FileReader = FR;
 			document.body.addEventListener('drop', function(e) {
