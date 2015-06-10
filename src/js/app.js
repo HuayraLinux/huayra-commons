@@ -8,7 +8,7 @@
 		gui = require('nw.gui');
 
 	$(document).ready(function() {
-		login.init();
+		login.init(gui);
 		upload.init(document, FileReader, gui);
 		info.init(gui, upload);
 	});

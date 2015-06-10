@@ -6,7 +6,11 @@ module.exports = (function(require) {
 		router = require('./router');
 
 	return {
-		init: function() {
+		init: function(gui) {
+			$('#login-wrapper #register').click(function(e) {
+				e.preventDefault();
+				gui.Shell.openExternal($(this).attr('href'));
+			});
 			$('#login-wrapper input[name=username]').focus();
 			$('#login-wrapper form').submit(function(e) {
 				e.preventDefault();
