@@ -6,7 +6,7 @@ module.exports = (function(require) {
 		router = require('./router');
 
 	return {
-		init: function(gui) {
+		init: function(gui, navigator) {
 			$('#login-wrapper #register').click(function(e) {
 				e.preventDefault();
 				gui.Shell.openExternal($(this).attr('href'));
@@ -34,7 +34,18 @@ module.exports = (function(require) {
 				).then(function() {
 					$(that).find('input').attr('disabled', false);
 					router.goToStep(2);
-				}, function() {
+				}, function(err) {
+					var errorText;
+					err = (err || '') + '';
+					if(err.indexOf('WrongPluginPass') != -1) {
+						errorText = 'Nombre de usuario o contraseña incorrectos';
+					}
+					else if(!navigator.onLine) {
+						errorText = 'No hay conexión a internet. Comprueba tu conexión y vuelve a intentarlo.';
+					}
+					else {
+						errorText = 'Error: ' + err;
+					}
 					$(that).find('input').attr('disabled', false);
 					$username.focus();
 					$password.val('');
@@ -42,7 +53,7 @@ module.exports = (function(require) {
 						.empty()
 						.addClass('error')
 						.removeClass('info')
-						.text('Nombre de usuario o contraseña incorrectos');
+						.text(errorText);
 				});
 
 				return false;

@@ -1,4 +1,4 @@
-(function(require, document, FileReader) {
+(function(require, document, FileReader, navigator) {
 	'use strict';
 
 	var $ = require('./js/jquery'),
@@ -8,8 +8,8 @@
 		gui = require('nw.gui');
 
 	$(document).ready(function() {
-		login.init(gui);
+		login.init(gui, navigator);
 		upload.init(document, FileReader, gui);
 		info.init(gui, upload);
 	});
-})(require, document, FileReader);
+})(require, document, FileReader, navigator);
