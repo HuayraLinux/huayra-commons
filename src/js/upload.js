@@ -240,7 +240,8 @@ module.exports = (function(require) {
 					mediaWiki.upload({
 						fileName: $('#upload-wrapper #title').val().trim(),
 						file: fileContent,
-						summary: $('#upload-wrapper #descripcion').val() + Category.getUploadCategories(),
+						summary: $('#upload-wrapper #descripcion').val(),
+						categories: Category.getUploadCategories(),
 						license: $('#upload-wrapper input[name=license]').val()
 					}).then(uploadOk, uploadError);
 				};

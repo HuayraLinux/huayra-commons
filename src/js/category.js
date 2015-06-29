@@ -79,11 +79,12 @@ module.exports = (function() {
 		return this._categories;
 	};
 	Category.getUploadCategories = function() {
+		if(!this.getAll().length) {
+			return '';
+		}
 		return this.getAll().map(function(aCategory) {
 			return aCategory.getUpload();
-		}).reduce(function(total, aString) {
-			return total + aString;
-		}, '');
+		}).join('\n');
 	};
 	Category.find = function(categoryName) {
 		return this._categories.find(function(aCategory) {

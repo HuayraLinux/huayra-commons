@@ -23,7 +23,7 @@ module.exports = (function(require) {
 			$('#info-wrapper #uploaded-file-view-url')
 				.attr('href', data.imageinfo.url)
 				.text(data.imageinfo.url);
-			$('#info-wrapper #uploaded-description').text(data.imageinfo.parsedcomment);
+			$('#info-wrapper #uploaded-description').html(data.imageinfo.parsedcomment);
 			$('#info-wrapper #uploaded-file-name').text(data.filename);
 		}
 	};

@@ -21,10 +21,10 @@ module.exports = (function(require) {
 //	password: 'asd123',
 
 
-	var setLicense = function(fileName, license, captchaData, res) {
+	var setLicense = function(fileName, license, categories, captchaData, res) {
 		console.log(fileName, license, captchaData, res);
 		return new Promise(function(fulfill, reject) {
-			mw.edit('File:' + fileName, '=={{int:license-header}}==\n' + license, 'Agregando la licencia', function(err, resLicense) {
+			mw.edit('File:' + fileName, '=={{int:license-header}}==\n' + license + categories, 'Agregando la licencia', function(err, resLicense) {
 				if(err) {
 					console.warn('license error', err);
 					reject(err);
@@ -71,7 +71,7 @@ module.exports = (function(require) {
 						reject(err);
 						return;
 					}
-					setLicense(res.filename, opts.license, null, res).then(fulfill, reject);
+					setLicense(res.filename, opts.license, opts.categories, null, res).then(fulfill, reject);
 				});
 			});
 		},
