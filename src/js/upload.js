@@ -20,7 +20,6 @@ module.exports = (function(require) {
 
 	var preview = {
 		_selectType: function(mimeType) {
-			console.log(mimeType);
 			switch(mimeType.split('/')[0]) {
 				case 'image':
 					this._previewer = previewImage;
@@ -56,6 +55,10 @@ module.exports = (function(require) {
 		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', false);
 		$('#upload-wrapper #drop-file').removeClass('drag');
 		$('#upload-wrapper input[name=license]').prop('checked', false);
+
+		Category.reset();
+		$('#upload-wrapper #categories').empty();
+		$('#upload-wrapper #new-category, #upload-wrapper #add-category').attr('disabled', false);
 	};
 
 	var loadingState = function(fileName, type, path) {
@@ -89,6 +92,9 @@ module.exports = (function(require) {
 		$('#upload-wrapper input[type=submit]').hide();
 		$('#upload-wrapper #sending-button, #upload-wrapper #cancel-upload').show();
 		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', true);
+
+		$('#upload-wrapper #new-category, #upload-wrapper #add-category').attr('disabled', false);
+		Category.disable();
 	};
 
 	var onFileError = function(e) {
@@ -176,7 +182,7 @@ module.exports = (function(require) {
 
 	var uploadError = function(err) {
 		debugger;
-		bootbox.alert('<p><strong>Ocurrió un error y no se ha podido subir el archivo.</strong></p>' + (err ? '<p>Detalles del error: ' + err : '.</p>'));
+		bootbox.alert('<p><strong>Ocurrió un error y no se ha podido subir el archivo.</strong></p>' + (err ? '<p>Detalles del error: <i>' + err : '</i>.</p>'));
 		loadState();
 	};
 
@@ -201,9 +207,16 @@ module.exports = (function(require) {
 					new Category($('#new-category').val(), $('#categories'));
 					$('#new-category').val('');
 					$('#new-category').focus();
+					$('#no-categories').hide();
 				}
 				catch(e) {
 					bootbox.alert(e);
+				}
+			});
+
+			Category.onRemove(function() {
+				if(!Category.getAll().length) {
+					$('#no-categories').show();
 				}
 			});
 
@@ -221,6 +234,65 @@ module.exports = (function(require) {
 			});
 
 			$('#upload-wrapper form').submit(function(e) {
+				var _send = function() {
+					sendingState();
+
+					mediaWiki.upload({
+						fileName: $('#upload-wrapper #title').val().trim(),
+						file: fileContent,
+						summary: $('#upload-wrapper #descripcion').val() + Category.getUploadCategories(),
+						license: $('#upload-wrapper input[name=license]').val()
+					}).then(uploadOk, uploadError);
+				};
+
+				var _descripcion = function() {
+					return new Promise(function(fulfill, reject) {
+						if(!$('#upload-wrapper #descripcion').val().trim()) {
+							bootbox.dialog({
+								message: 'Aún no escribiste una descripción para este archivo. Te recomendamos enfáticamente hacerlo. ¿Estás seguro/a de querer subir el archivo sin escribir antes su descripción?',
+								title: '¿Subir archivo sin descripción?',
+								buttons: {
+									cancel: {
+										label: 'Cancelar',
+									},
+									success: {
+										label: "OK",
+										className: "btn-success",
+										callback: fulfill
+									}
+								}
+							});
+						}
+						else {
+							fulfill();
+						}
+					});
+				};
+
+				var _categorias = function() {
+					return new Promise(function(fulfill, reject) {
+						if(!Category.getAll().length) {
+							bootbox.dialog({
+								message: 'No categorizaste el archivo. Te recomendamos enfáticamente hacerlo. ¿Estás seguro/a de querer subir el archivo sin categorizarlo antes?',
+								title: '¿Subir archivo sin categorizar?',
+								buttons: {
+									cancel: {
+										label: 'Cancelar',
+									},
+									success: {
+										label: "OK",
+										className: "btn-success",
+										callback: fulfill
+									}
+								}
+							});
+						}
+						else {
+							fulfill();
+						}
+					});
+				};
+
 				e.preventDefault();
 
 				if(!fileContent) {
@@ -238,14 +310,7 @@ module.exports = (function(require) {
 					return;
 				}
 
-				sendingState();
-
-				mediaWiki.upload({
-					fileName: $('#upload-wrapper #title').val().trim(),
-					file: fileContent,
-					summary: $('#upload-wrapper #descripcion').val(),
-					license: $('#upload-wrapper input[name=license]').val()
-				}).then(uploadOk, uploadError);
+				_descripcion().then(_categorias).then(_send);
 			});
 
 			FileReader = FR;

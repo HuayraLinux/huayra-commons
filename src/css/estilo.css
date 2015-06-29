@@ -200,7 +200,31 @@ body.paso-3 #sections-wrapper {
 	color: red;
 }
 
-#upload-wrapper #categories div {
+#upload-wrapper #categories a.disabled {
+	color: gray;
+}
+
+#upload-wrapper #categories li {
 	display: inline-block;
 	margin-right: 0.6em;
+}
+
+
+/*******************************************************************/
+.bootbox.modal {
+	background: rgba(0,0,0,0.5);
+}
+
+
+/************************************************************/
+#upload-wrapper #submit-wrapper {
+	margin-top: 230px;
+	height: 100px;
+	text-align: center;
+}
+
+#upload-wrapper #categories-wrapper {
+	position: relative;
+	top: -320px;
+	height: 200px;
 }

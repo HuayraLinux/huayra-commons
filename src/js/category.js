@@ -12,7 +12,7 @@ module.exports = (function() {
 	};
 	Category.prototype._buildDom = function() {
 		var that = this;
-		this.$dom = $(document.createElement('div'));
+		this.$dom = $(document.createElement('li'));
 		var $text = $(document.createElement('span'))
 			.text(this.getName())
 			.appendTo(this.$dom);
@@ -55,12 +55,35 @@ module.exports = (function() {
 		Category.remove(this);
 		return this;
 	};
+	Category.prototype.getUpload = function() {
+		return '[[Category:' + this.getName() + ']]';
+	};
+	Category.prototype.disable = function() {
+		this.$dom.find('a').addClass('disabled').off().click(function(e) {
+			e.preventDefault();
+		});
+		return this;
+	};
 
+	Category._onRemoveCallbacks = [];
+	Category.onRemove = function(aCallback) {
+		this._onRemoveCallbacks.push(aCallback);
+		return this;
+	};
 	Category.reset = function() {
 		this._categories = [];
+		this._callOnRemoveCallbacks();
+		return this;
 	};
 	Category.getAll = function() {
 		return this._categories;
+	};
+	Category.getUploadCategories = function() {
+		return this.getAll().map(function(aCategory) {
+			return aCategory.getUpload();
+		}).reduce(function(total, aString) {
+			return total + aString;
+		}, '');
 	};
 	Category.find = function(categoryName) {
 		return this._categories.find(function(aCategory) {
@@ -71,11 +94,19 @@ module.exports = (function() {
 		this._categories.push(aCategory);
 		return this;
 	};
+	Category._callOnRemoveCallbacks = function() {
+		var that = this;
+		this._onRemoveCallbacks.forEach(function(aCallback) {
+			aCallback(that);
+		});
+		return this;
+	};
 	Category.remove = function(aCategory) {
 		var idx;
 		while((idx = this._categories.indexOf(aCategory)) != -1) {
 			this._categories.splice(idx, 1);
 		}
+		this._callOnRemoveCallbacks();
 		return this;
 	};
 	Category.configure = function(jQuery, doc) {
@@ -83,6 +114,12 @@ module.exports = (function() {
 		document = doc;
 
 		this.reset();
+	};
+	Category.disable = function() {
+		this.getAll().forEach(function(aCategory) {
+			aCategory.disable();
+		});
+		return this;
 	};
 
 	return Category;

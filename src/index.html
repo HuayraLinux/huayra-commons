@@ -90,19 +90,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-					<h4>Categorías</h4>
-					<p>Las categorías sirven para clasificar el archivo y luego poder encontrarlo más fácilmente.</p>
-					<input type="text" id="new-category" placeholder="Nombre de la categoría" disabled="disabled" tabindex="-1" /><button id="add-category" disabled="disabled" class="btn-success">+</button>
-					<ul id="categories"></ul>
-					<div id="no-categories">El archivo no está categorizado aún. Categorízalo antes de subirlo.</div>
-					<div id="loading-categories">
-						Cargando las categorías...
-						<span class="glyphicon glyphicon-cog spinner"></span>
-					</div>
-				</div>
-
-				<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="margin-top:15px; text-align: center;">
+				<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" id="submit-wrapper">
 					<input type="submit" value="Subir" class="btn btn-success" disabled="disabled" />
 					<button id="sending-button" disabled="disabled" class="btn btn-warning">
 						Subiendo...
@@ -113,6 +101,18 @@
 					-->
 				</div>
 			</form>
+
+			<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" id="categories-wrapper">
+				<h4>Categorías</h4>
+				<p>Las categorías sirven para clasificar el archivo y luego poder encontrarlo más fácilmente.</p>
+				<input type="text" id="new-category" placeholder="Nombre de la categoría" disabled="disabled" /><button id="add-category" disabled="disabled" class="btn-success">+</button>
+				<ul id="categories"></ul>
+				<div id="no-categories">El archivo no está categorizado aún. Categorízalo antes de subirlo.</div>
+				<div id="loading-categories">
+					Cargando las categorías...
+					<span class="glyphicon glyphicon-cog spinner"></span>
+				</div>
+			</div>
 		</section>
 		<section id="info-wrapper">
 			<h1>Archivo subido</h1>
