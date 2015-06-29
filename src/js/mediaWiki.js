@@ -2,7 +2,8 @@ module.exports = (function(require) {
 	'use strict';
 
 	var Promise = require('bluebird'),
-		server = 'commons.wikimedia.org',
+		server = 'www.mediawiki.org',
+//		server = 'commons.wikimedia.org',
 //		server = "mediawiki-cvcv.rhcloud.com",
 		MW = require('nodemw'),
 		mw = new MW({
@@ -71,6 +72,18 @@ module.exports = (function(require) {
 						return;
 					}
 					setLicense(res.filename, opts.license, null, res).then(fulfill, reject);
+				});
+			});
+		},
+		getCategories: function() {
+			return new Promise(function(fulfill, reject) {
+				mw.getCategories(function(err, cats) {
+					if(err) {
+						reject(err);
+					}
+					else {
+						fulfill(cats);
+					}
 				});
 			});
 		}
