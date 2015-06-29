@@ -1,5 +1,6 @@
 body {
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 section {
 	display: inline-block;
@@ -181,4 +182,25 @@ body.paso-3 #sections-wrapper {
 	position: absolute;
 	bottom: 0;
 	left: 0;
+}
+
+#upload-wrapper #no-categories {
+	display: none;
+}
+
+#upload-wrapper #no-categories, #upload-wrapper #loading-categories {
+	text-align: center;
+	font-size: 2em;
+	color: gray;
+}
+
+#upload-wrapper #categories a {
+	margin-left: 0.2em;
+	font-weight: bold;
+	color: red;
+}
+
+#upload-wrapper #categories div {
+	display: inline-block;
+	margin-right: 0.6em;
 }

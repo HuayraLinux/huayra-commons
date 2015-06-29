@@ -16,6 +16,7 @@ module.exports = (function(require) {
 			});
 		},
 		setData: function(data) {
+			console.log(data);
 			$('#info-wrapper #uploaded-file-edition-url')
 				.attr('href', data.imageinfo.descriptionurl)
 				.text(data.imageinfo.descriptionurl);

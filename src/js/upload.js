@@ -3,6 +3,8 @@ module.exports = (function(require) {
 
 	var $ = require('./jquery'),
 		mediaWiki = require('./mediaWiki'),
+		categories = require('./categories'),
+		Category = require('./category'),
 		router = require('./router'),
 		infoPage = require('./infoPage'),
 		Promise = require('bluebird'),
@@ -174,13 +176,38 @@ module.exports = (function(require) {
 
 	var uploadError = function(err) {
 		debugger;
-		bootbox.alert('Ocurrió un error' + (err ? ': ' + err : '.'));
+		bootbox.alert('<p><strong>Ocurrió un error y no se ha podido subir el archivo.</strong></p>' + (err ? '<p>Detalles del error: ' + err : '.</p>'));
 		loadState();
 	};
 
 	return {
 		init: function(document, FR, gui) {
 			bootbox = require('./bootbox')(document);
+
+			categories.ready(function() {
+				$('#loading-categories').hide();
+				$('#no-categories').show();
+				$('#new-category, #add-category').attr('disabled', false);
+			});
+
+			$('#new-category').keydown(function(e) {
+				if(e.keyCode == 13) {
+					$('#add-category').click();
+				}
+			});
+
+			$('#add-category').click(function() {
+				try {
+					new Category($('#new-category').val(), $('#categories'));
+					$('#new-category').val('');
+					$('#new-category').focus();
+				}
+				catch(e) {
+					bootbox.alert(e);
+				}
+			});
+
+			////////////////////////////////
 
 			$('#captcha-wrapper').modal({
 				backdrop: 'static',
