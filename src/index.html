@@ -74,19 +74,31 @@
 					<h4>Licencia</h4>
 					<div class="license-wrapper">
 						<input id="license1_0" name="license" type="radio" value="{{self|cc-by-sa-4.0}}" required />
-						<label for="license1_0">Creative Commons Attribution ShareAlike 4.0 (<a href="http://creativecommons.org/licenses/by-sa/4.0/">texto legal</a>)</label>
+						<label for="license1_0">Creative Commons Attribution ShareAlike 4.0 (<a href="http://creativecommons.org/licenses/by-sa/4.0/deed.es">texto legal</a>)</label>
 						<br />
 						<input id="license1_1" name="license" type="radio" value="{{self|cc-by-sa-3.0}}" />
-						<label for="license1_1">Creative Commons Attribution ShareAlike 3.0 (<a href="http://creativecommons.org/licenses/by-sa/3.0/">texto legal</a>)</label>
+						<label for="license1_1">Creative Commons Attribution ShareAlike 3.0 (<a href="http://creativecommons.org/licenses/by-sa/3.0/deed.es">texto legal</a>)</label>
 						<br />
 						<input id="license1_2" name="license" type="radio" value="{{self|cc-by-4.0}}" />
-						<label for="license1_2">Creative Commons Attribution 4.0 (<a href="http://creativecommons.org/licenses/by/4.0/">texto legal</a>)</label>
+						<label for="license1_2">Creative Commons Attribution 4.0 (<a href="http://creativecommons.org/licenses/by/4.0/deed.es">texto legal</a>)</label>
 						<br />
 						<input id="license1_3" name="license" type="radio" value="{{self|cc-by-3.0}}" />
-						<label for="license1_3">Creative Commons Attribution 3.0 (<a href="http://creativecommons.org/licenses/by/3.0/">texto legal</a>)</label>
+						<label for="license1_3">Creative Commons Attribution 3.0 (<a href="http://creativecommons.org/licenses/by/3.0/deed.es">texto legal</a>)</label>
 						<br />
 						<input id="license1_4" name="license" type="radio" value="{{self|cc-zero}}" />
-						<label for="license1_4">Creative Commons CC0 Waiver (<a href="http://creativecommons.org/publicdomain/zero/1.0/">texto legal</a>)</label>
+						<label for="license1_4">Creative Commons CC0 Waiver (<a href="http://creativecommons.org/publicdomain/zero/1.0/deed.es">texto legal</a>)</label>
+					</div>
+				</div>
+
+				<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+					<h4>Categorías</h4>
+					<p>Las categorías sirven para clasificar el archivo y luego poder encontrarlo más fácilmente.</p>
+					<input type="text" id="new-category" placeholder="Nombre de la categoría" disabled="disabled" /><button id="add-category" disabled="disabled">+</button>
+					<ul id="categories"></ul>
+					<div id="no-categories">El archivo no está categorizado aún. Categorízalo antes de subirlo.</div>
+					<div id="loading-categories">
+						Cargando las categorías...
+						<span class="glyphicon glyphicon-cog spinner"></span>
 					</div>
 				</div>
 
