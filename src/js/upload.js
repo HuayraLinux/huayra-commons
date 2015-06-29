@@ -93,7 +93,7 @@ module.exports = (function(require) {
 		$('#upload-wrapper #sending-button, #upload-wrapper #cancel-upload').show();
 		$('#upload-wrapper #file-button, #upload-wrapper #file, #upload-wrapper #cancel-file, #upload-wrapper #cancel-reading, #upload-wrapper #title, #upload-wrapper #descripcion, #upload-wrapper').attr('disabled', true);
 
-		$('#upload-wrapper #new-category, #upload-wrapper #add-category').attr('disabled', false);
+		$('#upload-wrapper #new-category, #upload-wrapper #add-category').attr('disabled', true);
 		Category.disable();
 	};
 
@@ -194,6 +194,17 @@ module.exports = (function(require) {
 				$('#loading-categories').hide();
 				$('#no-categories').show();
 				$('#new-category, #add-category').attr('disabled', false);
+				var categoriesList = document.createDocumentFragment();
+				categories.getAll().forEach(function(aCategory) {
+					if(aCategory.length < 3) {
+						return;
+					}
+					$(document.createElement('option'))
+						.attr('label', aCategory)
+						.val(aCategory)
+						.appendTo(categoriesList);
+				});
+				$('#categories-list').append(categoriesList);
 			});
 
 			$('#new-category').keydown(function(e) {

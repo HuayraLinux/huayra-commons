@@ -105,7 +105,8 @@
 			<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" id="categories-wrapper">
 				<h4>Categorías</h4>
 				<p>Las categorías sirven para clasificar el archivo y luego poder encontrarlo más fácilmente.</p>
-				<input type="text" id="new-category" placeholder="Nombre de la categoría" disabled="disabled" /><button id="add-category" disabled="disabled" class="btn-success">+</button>
+				<input type="text" id="new-category" placeholder="Nombre de la categoría" disabled="disabled" list="categories-list" /><button id="add-category" disabled="disabled" class="btn-success">+</button>
+				<datalist id="categories-list"></datalist>
 				<ul id="categories"></ul>
 				<div id="no-categories">El archivo no está categorizado aún. Categorízalo antes de subirlo.</div>
 				<div id="loading-categories">

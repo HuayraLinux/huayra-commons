@@ -27,6 +27,9 @@ module.exports = (function(require) {
 				fs.writeFileSync('categories.json', JSON.stringify(categories));
 			});
 		},
+		getAll: function() {
+			return this._data;
+		},
 		find: function(categoryName) {
 			this._validateSearch(categoryName);
 			return this._data.find(function(aCategoryName) {
