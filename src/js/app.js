@@ -9,6 +9,9 @@
 		Category = require('./js/category'),
 		gui = require('nw.gui');
 
+		var win = gui.Window.get();
+		win.title = "Huayra Commons";
+
 	$(document).ready(function() {
 		Category.configure($, document);
 		categories.init();

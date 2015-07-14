@@ -1,4 +1,6 @@
 ¡Hola, esto es huayra-commons!
 ==========================
 
-Este archivo describe el objetivo del proyecto.
+Huayra Commons es una aplicacion para publicar imagenes en el sitio WikiCommons.
+
+![Huayra Commons](screenshot.png)
