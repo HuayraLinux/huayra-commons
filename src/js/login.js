@@ -7,7 +7,7 @@ module.exports = (function(require) {
 
 	return {
 		init: function(gui, navigator) {
-			$('#login-wrapper #register').click(function(e) {
+			$('#btn-register').click(function(e) {
 				e.preventDefault();
 				gui.Shell.openExternal($(this).attr('href'));
 			});
@@ -29,7 +29,7 @@ module.exports = (function(require) {
 				$(this).find('input').attr('disabled', true);
 
 				mediaWiki.login(
-					$username.val().trim(), 
+					$username.val().trim(),
 					$password.val()
 				).then(function() {
 					$(that).find('input').attr('disabled', false);
